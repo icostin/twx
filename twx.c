@@ -109,6 +109,7 @@ TWX_API twx_status_t ZLX_CALL twx_create
 {
     twx_t * twx;
     unsigned int cs;
+    zlx_mth_status_t ths;
     hbs_status_t hs;
     twx_status_t ts = TWX_BUG;
     uint16_t h, w;
@@ -170,10 +171,10 @@ TWX_API twx_status_t ZLX_CALL twx_create
         twx->width = w;
         twx->screen_resized = 1;
 
-        hs = hbs_thread_create(&twx->input_thread, input_processor, twx);
-        if (hs)
+        ths = hbs_thread_create(&twx->input_thread, input_processor, twx);
+        if (ths)
         {
-            L("ouch: %u", hs);
+            L("ouch: %u", ths);
             ts = TWX_THREAD_CREATE_FAILED;
             break;
         }
