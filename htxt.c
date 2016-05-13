@@ -78,15 +78,14 @@ TWX_API twx_status_t ZLX_CALL twx_htxt_win_create
 )
 {
     htxt_win_t * hw;
-    hbs_status_t hs;
 
     L("allocating...");
     hw = win_alloc(twx, &htxt_wcls);
     L("hw=%p", hw);
     if (!hw) return TWX_NO_MEM;
-    hs = hbs_mutex_create(&hw->mutex);
+    hw->mutex = hbs_mutex_create("twx.htxt.mutex");
     L("mutex=%p", hw->mutex);
-    if (hs) { hbs_free(hw, htxt_wcls.size); return TWX_NO_MEM; }
+    if (!hw->mutex) { hbs_free(hw, htxt_wcls.size); return TWX_NO_MEM; }
     *win_ptr = &hw->base;
     hw->attr_a = attr_a;
     hw->attr_n = attr_n;

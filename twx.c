@@ -47,7 +47,7 @@ TWX_API void ZLX_CALL twx_shutdown
 }
 
 /* input_processor **********************************************************/
-static uint32_t ZLX_CALL input_processor (void * arg)
+static uint8_t ZLX_CALL input_processor (void * arg)
 {
     twx_t * twx = arg;
     unsigned int cs;
@@ -110,7 +110,6 @@ TWX_API twx_status_t ZLX_CALL twx_create
     twx_t * twx;
     unsigned int cs;
     zlx_mth_status_t ths;
-    hbs_status_t hs;
     twx_status_t ts = TWX_BUG;
     uint16_t h, w;
 
@@ -133,20 +132,20 @@ TWX_API twx_status_t ZLX_CALL twx_create
             break;
         }
 
-        hs = hbs_mutex_create(&twx->main_mutex);
-        if (hs)
+        twx->main_mutex = hbs_mutex_create("twx.mutex.main");
+        if (!twx->main_mutex)
         {
-            L("ouch: %u", hs);
+            L("ouch");
             ts = TWX_NO_MEM;
             break;
         }
         twx->init_state |= TWX_INITED_MUTEX;
 
-        hs = hbs_cond_create(&twx->main_cond);
-        if (hs)
+        twx->main_cond = hbs_cond_create(&ths, "twx.cond.main");
+        if (!twx->main_cond)
         {
-            L("ouch: %u", hs);
-            ts = TWX_NO_MEM;
+            L("ouch: %u", ths);
+            ts = ths == ZLX_MTH_NO_MEM ? TWX_NO_MEM : TWX_MAIN_COND_INIT_FAILED;
             break;
         }
         twx->init_state |= TWX_INITED_COND;

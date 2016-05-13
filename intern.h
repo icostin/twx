@@ -29,9 +29,9 @@ enum twx_state_enum
 
 struct twx_s
 {
-    hbs_mutex_t * main_mutex;
-    hbs_thread_t input_thread;
-    hbs_cond_t * main_cond;
+    zlx_mutex_t * main_mutex;
+    zlx_tid_t input_thread;
+    zlx_cond_t * main_cond;
     twx_win_t * root_win;
     twx_win_t * focus_win;
     twx_win_t * new_focus_win;
@@ -57,7 +57,7 @@ struct blank_win_s
 struct htxt_win_s
 {
     twx_win_t base;
-    hbs_mutex_t * mutex;
+    zlx_mutex_t * mutex;
     uint8_t * * rta; // row text array
     size_t * rsa; // row len array - how many bytes are allocated for each row
     acx1_attr_t * attr_a;
@@ -70,7 +70,7 @@ struct htxt_win_s
 struct itxt_win_s
 {
     twx_win_t base;
-    hbs_mutex_t * mutex;
+    zlx_mutex_t * mutex;
     acx1_attr_t * attr_a;
     uint8_t * pfx;
     uint8_t * text;
